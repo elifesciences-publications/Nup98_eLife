@@ -1,0 +1,395 @@
+---
+title: "Gene Set comparisons"
+author: "Juliana S. Capitanio"
+date: "December 9, 2016"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Comparative analysis of available next generation sequencing datasets
+
+Genome-wide Nup98 interaction with chromatin was assessed through available DamID-seq data, by comparing enriched DNA sequences from Dam-Nup98 or Dam-Nup98dCTD expressing HeLa-C cells to those of Dam-GFP expressing cells (GSE83692). Data analysis was performed as described in the corresponding dataset and its publication.
+Transcriptome-wide interaction of Nup98 with mRNA molecules was determined from available sequencing data for Nup98 RNA immunoprecipitations from K562 cells (GSE67963) (G Hendrickson et al., 2016). DHX9 interaction with RNA was determined from sequencing data for DHX9 RNA immunoprecipitation from TC32 cells, kindly provided by Dr. Hayriye Verda Erkizan and Professor Jeffrey Alan Toretsky (Georgetown University) (Erkizan et al., 2015). Data analysis was performed as described in the corresponding datasets and their indicated publication, transcripts were considered as interacting with target proteins if showing a fold enrichment above 1.5 and adjusted p-value < 0.05.
+Transcriptome-wide changes in transcript or splicing isoform abundance were determined from RNA-sequencing data for HepG2 or IMR90 cells upon Nup98 depletion (GSE83551)(Franks et al., 2016). Transcriptome changes in NB1 cells upon DHX9 depletion were determined from available RNA-sequencing data (GSE44585) (Chen et al., 2014). Transcriptome sequencing data was analyzed as previously described (Wolfien et al., 2016), using Galaxy (Afgan et al., 2016), R (R Core Team, 2016) and Bioconductor (Huber et al., 2015). An adjusted p-value < 0.05 was used to identify transcripts/isoforms whose abundance was significantly altered upon target protein depletion.
+All datasets were aligned to human reference sequence GRCh37/hg19 and annotated with corresponding UCSC genes and Ensembl genes (Huang, Loganantharaj, Schroeder, Fargo, & Li, 2013; Rosenbloom et al., 2015; Yates et al., 2016; Yu, Wang, & He, 2015). Statistically significant overlap between gene sets were calculated using the Fisher's exact test based on the hypergeometric distribution through the R package GeneOverlap (Shen, 2013). 
+
+## Load all available datasets
+
+Datasets are stored as RData files containing lists of gene symbols.
+
+```{r, echo=FALSE}
+setwd("D:/Lab Stuff 2016/Data for review Nup98/NGS n98 DHX9/All data gene sets")
+library(GeneOverlap)
+file_names <- c("Allgenes.RData","CRE_genes.RData","Dam_all.RData","RIP_all.RData","Splice_all.RData","Transcript.RData","Allinfotogether.RData")
+
+lapply(file_names,load,.GlobalEnv)
+Dam.all <- Dam.all[[1]]
+RIP.all$Nup98RIP.K562 <- unique(RIP.all$Nup98RIP.K562)
+RIP.all$DHX9RIP.T32 <- unique(RIP.all$DHX9RIP.T32)
+RIP.all$both <- RIP.all$DHX9RIP.T32[RIP.all$DHX9RIP.T32 %in% RIP.all$Nup98RIP.K562]
+save(RIP.all,file = "RIP_all.RData")
+
+Transcript$changesameboth$bothupN98 <- Transcript$up$Nup98KD.HepG2[Transcript$up$Nup98KD.HepG2 %in% Transcript$up$Nup98KD.IMR90]
+
+Transcript$changesameboth$bothdownN98 <- Transcript$down$Nup98KD.IMR90[Transcript$down$Nup98KD.IMR90 %in% Transcript$down$Nup98KD.HepG2]
+
+Transcript$changesameboth$bothallN98 <- c(Transcript$changesameboth$bothupN98,Transcript$changesameboth$bothdownN98)
+save(Transcript,file = "Transcript.RData")
+```
+## Comparing Nup98 and DHX9 RNA-IP interacting mRNAs:
+
+```{r}
+gs.RNASeq <- 48321 #Number of all possible genes from ENSG
+
+go.obj <- newGeneOverlap(RIP.all$Nup98RIP.K562,RIP.all$DHX9RIP.T32,genome.size=gs.RNASeq)
+go.obj <- testGeneOverlap(go.obj)
+print(go.obj)
+
+```
+
+```{r, echo=FALSE}
+library(VennDiagram)
+grid.newpage()
+draw.pairwise.venn(16088,15130,6028, category = c("Nup98 RIP", "DHX9 RIP"), lty = rep("blank", 
+    2), fill = c("light blue", "pink"), alpha = rep(0.5, 2), cat.pos = c(0, 
+    0), cat.dist = rep(0.025, 2),print.mode="percent")
+
+grid.newpage()
+draw.pairwise.venn(16088,15130,6028, category = c("Nup98 RIP", "DHX9 RIP"), lty = rep("blank", 
+    2), fill = c("light blue", "pink"), alpha = rep(0.5, 2), cat.pos = c(0, 
+    0), cat.dist = rep(0.025, 2))
+```
+
+##Comparing changes in transcript splicing isoform upon DHX9 KD in NB1 cells, Nup98 KD in HepG2 cells and Nup98 KD in IMR90 cells
+
+Table of p-values:
+```{r}
+gs.RNASeq <- 23144 #ENSG spliced genes
+names(Splice.all) <- c("Nup98KD.HepG2","Nup98KD.IMR90","DHX9KD.NB1")
+gom.self <- newGOM(Splice.all, genome.size=gs.RNASeq)
+getMatrix(gom.self, name="pval")
+```
+
+Number of genes in common:
+```{r}
+getMatrix(gom.self, name="intersection")
+```
+
+```{r, echo=FALSE}
+
+grid.newpage()
+draw.triple.venn(866, 1118, 1428, 35, 162, 54, 11, category =
+c("DHX9KD - NB1","Nup98KD - HepG2", "Nup98KD - IMR90"), lty =
+rep("blank", 3),  fill = c("light blue", "pink", "light yellow"),
+alpha = rep(0.5, 3), cat.pos = c(-40,40,180), cat.dist =
+c(0.05, 0.05, 0.025),print.mode="percent")
+
+grid.newpage()
+draw.triple.venn(866, 1118, 1428, 35, 162, 54, 11, category =
+c("DHX9KD - NB1","Nup98KD - HepG2", "Nup98KD - IMR90"), lty =
+rep("blank", 3),  fill = c("light blue", "pink", "light yellow"),
+alpha = rep(0.5, 3), cat.pos = c(-40,40,180), cat.dist =
+c(0.05, 0.05, 0.025))
+```
+
+## Compare changes in transcript level upon DHX9 KD in NB1 cells, Nup98 KD in HepG2 cells and Nup98 KD in IMR90 cells
+
+All statistically significant genes (up or down regulated), table of p-values:
+```{r}
+gs.RNASeq <- 29432 #Total number of genes detected in these transcriptomes
+
+gom.self <- newGOM(Transcript$all, genome.size=gs.RNASeq)
+getMatrix(gom.self, name="pval")
+```
+Number of genes in common:
+```{r}
+getMatrix(gom.self, name="intersection")
+```
+
+```{r}
+grid.newpage()
+#draw.triple.venn(area1, area2, area3, n12, n23, n13, n123,
+draw.triple.venn(4546, 763, 924, 156, 61, 152, 21, category =
+c("DHX9KD - NB1","Nup98KD - HepG2", "Nup98KD - IMR90"), lty =
+rep("blank", 3),  fill = c("light blue", "pink", "light yellow"),
+alpha = rep(0.5, 3), cat.pos = c(-40,40,180), cat.dist =
+c(0.05, 0.05, 0.025))
+
+grid.newpage()
+#draw.triple.venn(area1, area2, area3, n12, n23, n13, n123,
+draw.triple.venn(4546, 763, 924, 156, 61, 152, 21, category =
+c("DHX9KD - NB1","Nup98KD - HepG2", "Nup98KD - IMR90"), lty =
+rep("blank", 3),  fill = c("light blue", "pink", "light yellow"),
+alpha = rep(0.5, 3), cat.pos = c(-40,40,180), cat.dist =
+c(0.05, 0.05, 0.025),print.mode="percent")
+
+```
+
+# Are genes with altered splicing upon Nup98 or DHX9 KD enriched in Nup98 or DHX9 RNA-IPs?
+
+```{r}
+gs.RNASeq <- 48321 #Number of all possible genes from ENSG
+gom.obj <- newGOM(Splice.all, RIP.all, genome.size=gs.RNASeq)
+getMatrix(gom.obj, name="pval")
+```
+
+Number of genes in common:
+```{r}
+getMatrix(gom.obj, name="intersection")
+```
+# Are genes with altered expression upon Nup98 or DHX9 KD enriched in Nup98 or DHX9 RNA-IPs?
+
+```{r}
+gom.obj <- newGOM(Transcript$all, RIP.all, genome.size=gs.RNASeq)
+getMatrix(gom.obj, name="pval")
+```
+
+Number of genes in common:
+```{r}
+getMatrix(gom.obj, name="intersection")
+```
+
+#Are genes with altered expression also enriched for CRE regulatory elements?
+
+Table of p-values:
+```{r}
+gom.obj <- newGOM(Transcript$all, CRE.genes, genome.size=gs.RNASeq)
+getMatrix(gom.obj, name="pval")
+```
+
+Number of genes in common:
+```{r}
+getMatrix(gom.obj, name="intersection")
+```
+
+#Are genes with altered splicing also enriched for CRE regulatory elements?
+
+Table of p-values:
+```{r}
+gom.obj <- newGOM(Splice.all, CRE.genes, genome.size=gs.RNASeq)
+getMatrix(gom.obj, name="pval")
+```
+
+Number of genes in common:
+```{r}
+getMatrix(gom.obj, name="intersection")
+```
+
+##Compare Dam-Nup98 interacting genes with CRE element containing genes
+
+Table of p-values for statically significant gene set overlaps:
+
+```{r}
+gom.obj <- newGOM(CRE.genes, Dam.all, gs.RNASeq)
+getMatrix(gom.obj, name="pval")
+```
+
+Number of genes in common:
+```{r}
+getMatrix(gom.obj, name="intersection")
+```
+
+```{r, echo = FALSE}
+#Storing the list of Genes that contain CRE elements and bind Nup98Dam
+N98Dam.CRE <- getNestedList(gom.obj, name="intersection")
+N98Dam.CRE <- list(DamNup98FLCRE = N98Dam.CRE$Nup98FL$CRE, DamNup98dCTDCRE = N98Dam.CRE$Nup98dCTD$CRE)
+save(N98Dam.CRE,file = "N98Dam.CRE.RData")
+```
+
+## Compare Nup98DamID genes with CRE elements to genes with altered expression upon Nup98 or DHX9 KD.
+
+Table of p-values:
+```{r}
+gom.obj <- newGOM(N98Dam.CRE, Transcript$all, gs.RNASeq)
+getMatrix(gom.obj, name="pval")
+```
+
+
+```{r, echo = FALSE}
+#Saving gene list overlap of genes with CRE elements, bound by Dam-Nup98 and showing altered transcription upon Nup98 or DHX9 KD.
+N98Dam.CRE.KD <- getNestedList(gom.obj, name="intersection")
+save(N98Dam.CRE.KD,file = "N98Dam.CRE.KD.RData")
+```
+
+Number of genes in common:
+```{r}
+getMatrix(gom.obj, name="intersection")
+```
+
+## Compare Nup98DamID genes with CRE elements to genes with altered splicing upon Nup98 or DHX9 KD.
+
+Table of p-values:
+```{r}
+gom.obj <- newGOM(N98Dam.CRE, Splice.all, gs.RNASeq)
+getMatrix(gom.obj, name="pval")
+```
+
+Number of genes in common:
+```{r}
+getMatrix(gom.obj, name="intersection")
+```
+
+## Compare Nup98DamID genes with CRE elements to mRNAs bound to Nup98 or DHX9 in RNA-IPs
+
+Table of p-values:
+```{r}
+gom.obj <- newGOM(N98Dam.CRE, RIP.all, gs.RNASeq)
+getMatrix(gom.obj, name="pval")
+```
+
+Number of genes in common:
+```{r}
+getMatrix(gom.obj, name="intersection")
+```
+
+
+```{r,echo=FALSE}
+#Saving data on genes with CRE element, bound by Dam-Nup98 and Nup98 or DHX9 RNA-IPs 
+N98Dam.CRE.RIP <- getNestedList(gom.obj, name="intersection")
+save(N98Dam.CRE.RIP,file = "N98Dam.CRE.RIP.RData")
+N98Dam.CRE.RIP <- list(CRE.DamFL.N98RIP = N98Dam.CRE.RIP$Nup98RIP.K562$DamNup98FLCRE,
+                       CRE.DamdCT.N98RIP = N98Dam.CRE.RIP$Nup98RIP.K562$DamNup98dCTDCRE,
+                       CRE.DamFL.D9RIP = N98Dam.CRE.RIP$DHX9RIP.T32$DamNup98FLCRE,
+                       CRE.DamdCT.D9RIP = N98Dam.CRE.RIP$DHX9RIP.T32$DamNup98dCTDCRE,
+                       CRE.DamFL.bothRIP = N98Dam.CRE.RIP$both$DamNup98FLCRE,
+                       CRE.DamdCT.bothRIP = N98Dam.CRE.RIP$both$DamNup98dCTDCRE)
+```
+
+## Compare CRE containing genes, bound by Dam-Nup98, bound to RNA-IP of Nup98 or DHX9 to genes with altered expression upon Nup98 or DHX9 KD
+
+Table of p-values
+```{r}
+gom.obj <- newGOM(N98Dam.CRE.RIP, Transcript$all, gs.RNASeq)
+getMatrix(gom.obj, name="pval")
+
+```
+
+Number of genes in common:
+```{r}
+getMatrix(gom.obj, name="intersection")
+
+getNestedList(gom.obj, name="intersection")
+
+```
+
+## Compare CRE containing genes, bound by Dam-Nup98, bound to RNA-IP of Nup98 or DHX9 to genes with altered splicing upon Nup98 or DHX9 KD
+
+Table of p-values
+```{r}
+gom.obj <- newGOM(N98Dam.CRE.RIP, Splice.all, gs.RNASeq)
+getMatrix(gom.obj, name="pval")
+
+```
+
+Number of genes in common:
+```{r}
+getMatrix(gom.obj, name="intersection")
+
+getNestedList(gom.obj, name="intersection")
+```
+
+## Subsetting genes with altered expression upon DHX9 KD and Nup98 KD that change in the same direction
+
+Given a change in expression upon DHX9 KD, consider true if it changes in the same direction in either Nup98 KD dataset.
+
+Percent of DHX9 KD upregulated genes also upregulated in either Nup98 KD:
+```{r}
+length(Transcript$changesameboth$upreg)/length(Transcript$up$DHX9KD.NB1)*100
+```
+
+Percent of DHX9 KD downregulated genes also downregulated in either Nup98 KD:
+```{r}
+length(Transcript$changesameboth$downreg)/length(Transcript$down$DHX9KD.NB1)*100
+```
+
+Percent of Nup98 KD upregulated genes in both cell lines:
+```{r}
+length(Transcript$changesameboth$bothupN98)/length(Transcript$up$Nup98KD.HepG2)*100
+```
+
+Percent of Nup98 KD downregulated genes in both cell lines:
+```{r}
+length(Transcript$changesameboth$bothdownN98)/length(Transcript$down$Nup98KD.IMR90)*100
+```
+# Compare genes with similarly altered expression upon DHX9 or Nup98 KD to genes bound by Dam-Nup98
+
+Table of p-values
+```{r}
+gom.obj <- newGOM(Transcript$changesameboth, Dam.all, gs.RNASeq)
+getMatrix(gom.obj, name="pval")
+
+```
+
+Number of genes in common:
+```{r}
+getMatrix(gom.obj, name="intersection")
+getNestedList(gom.obj, name="intersection")
+
+```
+
+# Compare genes with similarly altered expression upon DHX9 or Nup98 KD to genes bound by Nup98 or DHX9 RNA-IPs
+
+Table of p-values
+```{r}
+gom.obj <- newGOM(Transcript$changesameboth, RIP.all, gs.RNASeq)
+getMatrix(gom.obj, name="pval")
+
+```
+
+Number of genes in common:
+```{r}
+getMatrix(gom.obj, name="intersection")
+getNestedList(gom.obj, name="intersection")
+
+```
+
+# Compare genes with similarly altered expression upon DHX9 or Nup98 KD to genes with CRE element
+
+Table of p-values
+```{r}
+gom.obj <- newGOM(Transcript$changesameboth, CRE.genes, gs.RNASeq)
+getMatrix(gom.obj, name="pval")
+
+```
+
+Number of genes in common:
+```{r}
+getMatrix(gom.obj, name="intersection")
+getNestedList(gom.obj, name="intersection")
+```
+
+# Compare genes with similarly altered expression upon DHX9 or Nup98 KD to genes bound by Dam-Nup98 and containing CRE elements
+
+Table of p-values
+```{r}
+gom.obj <- newGOM(Transcript$changesameboth, N98Dam.CRE, gs.RNASeq)
+getMatrix(gom.obj, name="pval")
+
+```
+
+Number of genes in common:
+```{r}
+getMatrix(gom.obj, name="intersection")
+getNestedList(gom.obj, name="intersection")
+```
+
+# Compare genes with similarly altered expression upon DHX9 or Nup98 KD to genes bound by Dam-Nup98 with CRE elements and bound by Nup98 or DHX9 RNA-IPs
+
+Table of p-values
+```{r}
+gom.obj <- newGOM(Transcript$changesameboth, N98Dam.CRE.RIP, gs.RNASeq)
+getMatrix(gom.obj, name="pval")
+
+```
+
+Number of genes in common:
+```{r}
+getMatrix(gom.obj, name="intersection")
+```
+
+```{r}
+getNestedList(gom.obj, name="intersection")
+```
