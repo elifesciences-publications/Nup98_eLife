@@ -4,7 +4,7 @@ The word document "Data_comparisons_12Dec.docx" can be downloaded for a descript
 The "Data comparisons.Rmd" file is an R markdown file that can be used to reproduce the analysis. 
 Analysis reproduction requires the remainin data files ("Allgenes.RData","CRE_genes.RData","Dam_all.RData","RIP_all.RData","Splice_all.RData","Transcript.RData","Allinfotogether.RData") to have been downloaded and saved in the working directory.
 
-Example [Galaxy](https://usegalaxy.org/) workflows for analysis of [RNA-seq](https://usegalaxy.org/u/mwolfien/w/rnaseq-wolfien-pipeline) or ChIP-seq see [1](https://usegalaxy.org/u/chip-seq-helin-group/w/copy-of-helin-group---chip-seq-preprocessing-and-reads-mapping-bowtie) and [2](https://usegalaxy.org/u/chip-seq-helin-group/w/mmusculus-mm10-create-bam-bigwig-and-peakcalling-for-chip-seq) data are also provided, and have been previously described.
+Example [Galaxy](https://usegalaxy.org/) workflows for analysis of [RNA-seq](https://usegalaxy.org/u/mwolfien/w/rnaseq-wolfien-pipeline) or ChIP-seq (see [1](https://usegalaxy.org/u/chip-seq-helin-group/w/copy-of-helin-group---chip-seq-preprocessing-and-reads-mapping-bowtie) and [2](https://usegalaxy.org/u/chip-seq-helin-group/w/mmusculus-mm10-create-bam-bigwig-and-peakcalling-for-chip-seq)) data are also provided, and have been previously described.
 
 The datasets used for the analysis come the following publications:
 
