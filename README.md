@@ -2,7 +2,7 @@
 
 The word document "Data_comparisons_12Dec.docx" can be downloaded for a description of the analysis performed along with its results.
 The "Data comparisons.Rmd" file is an R markdown file that can be used to reproduce the analysis. 
-Analysis reproduction requires the remainin data files ("Allgenes.RData","CRE_genes.RData","Dam_all.RData","RIP_all.RData","Splice_all.RData","Transcript.RData","Allinfotogether.RData") to have been downloaded and saved in the working directory.
+Analysis reproduction requires the remaining data files ("Allgenes.RData","CRE_genes.RData","Dam_all.RData","RIP_all.RData","Splice_all.RData","Transcript.RData","Allinfotogether.RData") to have been downloaded and saved in the working directory.
 
 Example [Galaxy](https://usegalaxy.org/) workflows for analysis of [RNA-seq](https://usegalaxy.org/u/mwolfien/w/rnaseq-wolfien-pipeline) or ChIP-seq (see [1](https://usegalaxy.org/u/chip-seq-helin-group/w/copy-of-helin-group---chip-seq-preprocessing-and-reads-mapping-bowtie) and [2](https://usegalaxy.org/u/chip-seq-helin-group/w/mmusculus-mm10-create-bam-bigwig-and-peakcalling-for-chip-seq)) data are also provided, and have been previously described.
 
@@ -15,3 +15,6 @@ G Hendrickson D, Kelley DR, Tenen D, Bernstein B et al. Widespread RNA binding b
 Erkizan HV, Schneider JA, Sajwan K, et al. RNA helicase A activity is inhibited by oncogenic transcription factor EWS-FLI1. Nucleic Acids Research. 2015;43(2):1069-1080. doi:10.1093/nar/gku1328.
 
 Chen ZX, Wallis K, Fell SM, Sobrado VR et al. RNA helicase A is a downstream mediator of KIF1Bβ tumor-suppressor function in neuroblastoma. Cancer Discov 2014 Apr;4(4):434-51. PMID: 24469107
+
+IMPORTANT NOTICE: The license for this repository does not apply to the mentioned Galaxy workflows and indicated dataset. These were created by other authors and they hold the copyright to those products. The permissions from their licenses must be considered before usage. The goal of providing the code and data in this repository is simply to facilitate access to information and reproducibility of research results. 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
