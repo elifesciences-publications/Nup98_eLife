@@ -17,4 +17,5 @@ Erkizan HV, Schneider JA, Sajwan K, et al. RNA helicase A activity is inhibited 
 Chen ZX, Wallis K, Fell SM, Sobrado VR et al. RNA helicase A is a downstream mediator of KIF1Bβ tumor-suppressor function in neuroblastoma. Cancer Discov 2014 Apr;4(4):434-51. PMID: 24469107
 
 IMPORTANT NOTICE: The license for this repository does not apply to the mentioned Galaxy workflows and indicated dataset. These were created by other authors and they hold the copyright to those products. The permissions from their licenses must be considered before usage. The goal of providing the code and data in this repository is simply to facilitate access to information and reproducibility of research results. 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
