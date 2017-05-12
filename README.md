@@ -1,7 +1,7 @@
 # Nup98_eLife
 
 This analysis refers to the following publication: Capitanio, JS; Montpetit, BM; Wozniak, RW. "Human Nup98 regulates the localization and activity of DExH/D-box helicase DHX9"
-The corresponding author for the work is Prof. [Richard W. Wozniak](rwozniak@ualberta.ca), Department of Cell Biology, Faculty of Medicine and Dentistry, University of Alberta, Canada.
+The corresponding author for the work is Prof. [Richard W. Wozniak](rwozniak@ualberta.ca), Department of Cell Biology, Faculty of Medicine and Dentistry, University of Alberta, Canada. Available at http://dx.doi.org/10.7554/eLife.18825, eLife, 2017.
 
 The word document "Data_comparisons_12Dec.docx" can be downloaded for a description of the analysis performed along with its results.
 The "Data comparisons.Rmd" file is an R markdown file that can be used to reproduce the analysis. 
